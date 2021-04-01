@@ -15,6 +15,8 @@ let MEMBER_LIST_URL = "https://my.api.mockaroo.com/members_with_avatar.json?key=
 class ViewController: UIViewController {
     @IBOutlet var timerLabel: UILabel!
     @IBOutlet var editView: UITextView!
+    
+    var disposeBag = DisposeBag()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +34,7 @@ class ViewController: UIViewController {
         })
     }
     
-    private func downloadJson(_ url: String) -> Observable<String?> {
+    private func downloadJson(_ url: String) -> Observable<String> {
         return Observable.create() { emitter in
             let url = URL(string: url)!
             let task = URLSession.shared.dataTask(with: url) { (data, _, err) in
@@ -60,11 +62,30 @@ class ViewController: UIViewController {
         editView.text = ""
         self.setVisibleWithAnimation(self.activityIndicator, true)
         
-        _ = downloadJson(MEMBER_LIST_URL)
+//        Observable<String>.create() { emitter in
+//            let url = URL(string: MEMBER_LIST_URL)!
+//            let data = try! Data(contentsOf: url)
+//            let str = String(data: data, encoding: .utf8)!
+//            emitter.onNext(str)
+//            emitter.onCompleted()
+//            return Disposables.create()
+//        }
+//        .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .default))
+//        .observeOn(MainScheduler.instance)
+//        .subscribe(onNext: { t in
+//            self.editView.text = t
+//            self.setVisibleWithAnimation(self.activityIndicator, false)
+//        })
+        
+        let jsonObservable = downloadJson(MEMBER_LIST_URL)
+        let helloObservable = Observable.just("Hello World")
+        _ = Observable.zip(jsonObservable, helloObservable) { $1 + "\n" + $0 }
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { json in
                 self.editView.text = json
                 self.setVisibleWithAnimation(self.activityIndicator, false)
             })
+            .disposed(by: disposeBag)
+        
     }
 }
