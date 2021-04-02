@@ -13,19 +13,34 @@ class TableViewController: UIViewController {
     
     private let mockAPI = "https://my.api.mockaroo.com/piomock.json?key=5db4e260"
     
-    fileprivate var items: [Item] = []
+    fileprivate var items = PublishSubject<[Item]>()
+    
     var disposeBag = DisposeBag()
 
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.dataSource = self
         fetchItems()
+        items
+            .bind(to: tableView.rx.items(cellIdentifier: "ItemCell")) { index, element, cell in
+                cell.textLabel?.text = element.name
+                cell.detailTextLabel?.text = "\(element.money)"
+                DispatchQueue.global().async {
+                    let url = URL(string: element.avatar)!
+                    let data = try! Data(contentsOf: url)
+                    let image = UIImage(data: data)
+                    DispatchQueue.main.async {
+                        cell.imageView?.image = image
+                        cell.layoutSubviews()
+                    }
+                }
+            }
+            .disposed(by: disposeBag)
     }
     
     private func fetchItems() {
-        Observable<[Item]>.create { emitter in
+        _ = Observable<[Item]>.create { emitter in
             let url = URL(string: self.mockAPI)!
             let task = URLSession.shared.dataTask(with: url) { (data, _, err) in
                 guard err == nil else {
@@ -43,45 +58,9 @@ class TableViewController: UIViewController {
                 task.cancel()
             }
         }
-        .observe(on: MainScheduler.instance)
-        .subscribe(onNext: {
-            print($0)
-            self.items = $0
-            self.tableView.reloadData()
-        })
-        .disposed(by: disposeBag)
+        .take(1)
+        .bind(to: items)
     }
-}
-
-extension TableViewController: UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "ItemCell")
-        let item = items[indexPath.row]
-        _ = Observable<UIImage?>.create { emitter in
-            DispatchQueue.global().async {
-                let url = URL(string: item.avatar)!
-                let data = try! Data(contentsOf: url)
-                let image = UIImage(data: data)
-                emitter.onNext(image)
-            }
-            return Disposables.create()
-        }
-        .observe(on: MainScheduler.instance)
-        .subscribe(onNext: {
-            cell.imageView?.image = $0
-            cell.layoutSubviews()
-        })
-        cell.textLabel?.text = item.name
-        cell.detailTextLabel?.text = "\(item.money)"
-        return cell
-    }
-    
-    
 }
 
 fileprivate struct Item: Decodable {
