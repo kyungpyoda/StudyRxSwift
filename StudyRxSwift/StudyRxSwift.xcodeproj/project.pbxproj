@@ -74,13 +74,21 @@
 			children = (
 				D45D9156261581500023FEB3 /* AppDelegate.swift */,
 				D45D9158261581500023FEB3 /* SceneDelegate.swift */,
-				D45D915A261581500023FEB3 /* CounterViewController.swift */,
+				D474DDCA2616F0B70019B3E3 /* Scene */,
 				D45D915C261581510023FEB3 /* Main.storyboard */,
 				D45D915F261581510023FEB3 /* Assets.xcassets */,
 				D45D9161261581510023FEB3 /* LaunchScreen.storyboard */,
 				D45D9164261581510023FEB3 /* Info.plist */,
 			);
 			path = StudyRxSwift;
+			sourceTree = "<group>";
+		};
+		D474DDCA2616F0B70019B3E3 /* Scene */ = {
+			isa = PBXGroup;
+			children = (
+				D45D915A261581500023FEB3 /* CounterViewController.swift */,
+			);
+			path = Scene;
 			sourceTree = "<group>";
 		};
 		F9CA4EC8D0F2CBAAD75FBEFC /* Frameworks */ = {
