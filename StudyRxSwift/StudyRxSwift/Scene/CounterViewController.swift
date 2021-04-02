@@ -15,7 +15,7 @@ class CounterViewController: UIViewController {
     @IBOutlet weak var label2: UILabel!
     @IBOutlet weak var label3: UILabel!
     
-    var items: [Item] = [
+    fileprivate var items: [Item] = [
         Item(), Item(), Item()
     ]
     
@@ -83,6 +83,6 @@ class CounterViewController: UIViewController {
     
 }
 
-struct Item {
+fileprivate struct Item {
     var num = BehaviorSubject<Int>(value: 0)
 }
