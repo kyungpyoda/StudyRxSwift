@@ -107,8 +107,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="4qb-m6-EsN">
+                                <rect key="frame" x="0.0" y="44" width="414" height="56"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cQw-q8-Yqx">
-                                <rect key="frame" x="0.0" y="44" width="414" height="769"/>
+                                <rect key="frame" x="0.0" y="100" width="414" height="713"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ItemCell" id="yKX-Fs-rYd">
@@ -126,13 +130,17 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="KWw-3d-bCi" firstAttribute="bottom" secondItem="cQw-q8-Yqx" secondAttribute="bottom" id="0Pp-ox-7kW"/>
+                            <constraint firstItem="KWw-3d-bCi" firstAttribute="trailing" secondItem="4qb-m6-EsN" secondAttribute="trailing" id="6JY-Mg-Uvi"/>
                             <constraint firstItem="cQw-q8-Yqx" firstAttribute="leading" secondItem="KWw-3d-bCi" secondAttribute="leading" id="KWr-g8-pXl"/>
                             <constraint firstItem="KWw-3d-bCi" firstAttribute="trailing" secondItem="cQw-q8-Yqx" secondAttribute="trailing" id="Pds-3Q-xox"/>
-                            <constraint firstItem="cQw-q8-Yqx" firstAttribute="top" secondItem="KWw-3d-bCi" secondAttribute="top" id="juN-iZ-WMt"/>
+                            <constraint firstItem="4qb-m6-EsN" firstAttribute="leading" secondItem="KWw-3d-bCi" secondAttribute="leading" id="UFB-RR-pSG"/>
+                            <constraint firstItem="4qb-m6-EsN" firstAttribute="bottom" secondItem="cQw-q8-Yqx" secondAttribute="top" id="jTQ-kd-cpi"/>
+                            <constraint firstItem="4qb-m6-EsN" firstAttribute="top" secondItem="KWw-3d-bCi" secondAttribute="top" id="pKg-9d-Qvt"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Table" id="8eN-JC-bEg"/>
                     <connections>
+                        <outlet property="searchBar" destination="4qb-m6-EsN" id="cj5-fc-W1s"/>
                         <outlet property="tableView" destination="cQw-q8-Yqx" id="6gS-9D-7WO"/>
                     </connections>
                 </viewController>
@@ -146,6 +154,7 @@
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="aja-6i-a2A" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Ln7-fn-MZl">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
