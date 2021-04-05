@@ -10,12 +10,16 @@ import RxSwift
 import RxCocoa
 
 class CounterViewController: UIViewController {
+        
+    private struct Item {
+        var num = BehaviorSubject<Int>(value: 0)
+    }
 
     @IBOutlet weak var label1: UILabel!
     @IBOutlet weak var label2: UILabel!
     @IBOutlet weak var label3: UILabel!
     
-    fileprivate var items: [Item] = [
+    private var items: [Item] = [
         Item(), Item(), Item()
     ]
     
@@ -81,8 +85,4 @@ class CounterViewController: UIViewController {
         up3(sender)
     }
     
-}
-
-fileprivate struct Item {
-    var num = BehaviorSubject<Int>(value: 0)
 }

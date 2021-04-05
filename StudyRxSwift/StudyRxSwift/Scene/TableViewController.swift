@@ -11,9 +11,16 @@ import RxCocoa
 
 class TableViewController: UIViewController {
     
+    private struct Item: Decodable {
+        var id: Int
+        var avatar: String
+        var name: String
+        var money: Int
+    }
+    
     private let mockAPI = "https://my.api.mockaroo.com/piomock.json?key=5db4e260"
     
-    fileprivate var items = PublishSubject<[Item]>()
+    private var items = PublishSubject<[Item]>()
     
     var disposeBag = DisposeBag()
 
@@ -26,15 +33,15 @@ class TableViewController: UIViewController {
             .bind(to: tableView.rx.items(cellIdentifier: "ItemCell")) { index, element, cell in
                 cell.textLabel?.text = element.name
                 cell.detailTextLabel?.text = "\(element.money)"
-                DispatchQueue.global().async {
-                    let url = URL(string: element.avatar)!
-                    let data = try! Data(contentsOf: url)
-                    let image = UIImage(data: data)
-                    DispatchQueue.main.async {
-                        cell.imageView?.image = image
-                        cell.layoutSubviews()
-                    }
-                }
+                _ = self.loadImage(from: element.avatar)
+                    .observe(on: MainScheduler.instance)
+                    .subscribe(
+                        onNext: { image in
+                            cell.imageView?.image = image
+                            cell.layoutSubviews()
+                            
+                        }
+                    )
             }
             .disposed(by: disposeBag)
     }
@@ -61,11 +68,20 @@ class TableViewController: UIViewController {
         .take(1)
         .bind(to: items)
     }
-}
-
-fileprivate struct Item: Decodable {
-    var id: Int
-    var avatar: String
-    var name: String
-    var money: Int
+    
+    private func loadImage(from urlStr: String) -> Observable<UIImage?> {
+        return Observable.create { emitter in
+            DispatchQueue.global().async {
+                if let url = URL(string: urlStr),
+                   let data = try? Data(contentsOf: url) {
+                    emitter.onNext(UIImage(data: data))
+                } else {
+                    emitter.onNext(nil)
+                }
+                emitter.onCompleted()
+            }
+            
+            return Disposables.create()
+        }
+    }
 }
